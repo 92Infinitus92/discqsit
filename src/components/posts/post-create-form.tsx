@@ -12,10 +12,18 @@ import {
 import * as actions from "@/actions/actions";
 import FormButton from "../common/form-button";
 
-export default function PostCreateForm() {
-  const [formState, action] = useFormState(actions.createPost, {
-    errors: {},
-  });
+interface PostCreateFormProps {
+  slug: string;
+}
+
+export default function PostCreateForm({ slug }: PostCreateFormProps) {
+  const [formState, action] = useFormState(
+    actions.createPost.bind(null, slug),
+    {
+      errors: {},
+    }
+  );
+
   return (
     <Popover placement="left">
       <PopoverTrigger>
@@ -36,11 +44,18 @@ export default function PostCreateForm() {
             <Textarea
               isInvalid={!!formState.errors.content}
               errorMessage={formState.errors.content?.join(", ")}
-              name="body"
-              label="Body"
+              name="content"
+              label="Content"
               labelPlacement="outside"
-              placeholder="Body"
+              placeholder="Content"
             />
+
+            {formState.errors._form && (
+              <p className="bg-red-200 rounded p-2 border border-red-400">
+                {formState.errors._form.join(", ")}
+              </p>
+            )}
+
             <FormButton>Submit</FormButton>
           </div>
         </form>
